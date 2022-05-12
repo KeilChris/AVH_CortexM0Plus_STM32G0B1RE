@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<cprj schemaVersion="1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="CPRJ.xsd">
+
+  <created timestamp="2022-05-12T11:04:30" tool="uVision V5.37.0.0"/>
+
+  <info>
+    <name>Platform</name>
+    <description/>
+  </info>
+
+  <layers>
+    <layer name="App" title="Platform">
+      <description>Platform is a simple CMSIS RTOS2 example skeleton</description>
+      <category>Platform</category>
+      <license>Apache 2.0</license>
+      <interfaces>
+        <consumes id="RTOS2"/>
+      </interfaces>
+    </layer>
+    <layer hasTarget="1" name="Board" title="NUCLEO-G0B1RE">
+      <description>Board setup with interfaces</description>
+      <category>Board</category>
+      <license>BSD 3-Clause, Apache 2.0</license>
+      <interfaces>
+        <consumes id="RTOS2"/>
+        <provides id="A_IO9_I"/>
+        <provides id="A_IO10_O"/>
+        <provides id="C_VIO"/>
+        <provides id="STDOUT"/>
+        <provides id="STDIN"/>
+        <provides id="STDERR"/>
+        <provides id="Heap" value="65536"/>
+      </interfaces>
+    </layer>
+    <layer name="RTOS" title="RTX">
+      <description>Keil RTX5 open-source real-time operating system with CMSIS-RTOS v2 API</description>
+      <doc>https://www2.keil.com/mdk5/cmsis/rtx</doc>
+      <category>RTOS</category>
+      <license>Apache 2.0</license>
+      <interfaces>
+        <provides id="RTOS2"/>
+      </interfaces>
+    </layer>
+  </layers>
+
+  <packages>
+    <package name="NUCLEO-G0B1RE_BSP" vendor="Keil"/>
+    <package name="CMSIS" vendor="ARM"/>
+    <package name="Unity" vendor="Arm-Packs"/>
+    <package name="ARM_Compiler" vendor="Keil"/>
+    <package name="V2M-MPS2_CMx_BSP" vendor="Keil"/>
+  </packages>
+
+  <compilers>
+    <compiler name="AC6" version="6.0.0:6.99.99"/>
+  </compilers>
+
+  <target Bname="NUCLEO-G0B1RE" Bvendor="STMicroelectronics" Bversion="Rev.C" Ddsp="NO_DSP" Dendian="Little-endian" Dfpu="NO_FPU" Dmve="NO_MVE" Dname="CMSDK_CM0plus_VHT" Dsecure="Non-secure" Dtz="NO_TZ" Dvendor="ARM:82">
+    <output intdir="./Objects/" name="Platform" outdir="./Objects/" type="exe"/>
+    <ldflags add="--strict --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols --info sizes --info totals --info unused --info veneers --entry=Reset_Handler" compiler="AC6" file="./RTE/Device/CMSDK_CM0plus_VHT/ac6_arm.sct"/>
+    <cflags add="-O1 -Wno-documentation -Wno-documentation-unknown-command -Wno-license-management -Wno-missing-noreturn -Wno-missing-prototypes -Wno-missing-variable-declarations -Wno-nonportable-include-path -Wno-packed -Wno-parentheses-equality -Wno-reserved-id-macro -Wno-reserved-identifier -Wno-sign-conversion -Wno-unused-macros -ffunction-sections -fno-rtti -fshort-enums -fshort-wchar -funsigned-char -gdwarf-4 -std=c99 -xc" compiler="AC6"/>
+    <asflags add="-gdwarf-4 -masm=auto" compiler="AC6"/>
+    <includes>./CMSDK_CM0P_VHT</includes>
+    <defines/>
+  </target>
+
+  <components>
+    <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" layer="Board"/>
+    <component Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" layer="RTOS">
+      <file attr="config" category="source" name="CMSIS/RTOS2/RTX/Config/RTX_Config.c" version="5.1.1"/>
+      <file attr="config" category="header" name="CMSIS/RTOS2/RTX/Config/RTX_Config.h" version="5.5.2"/>
+    </component>
+    <component Cclass="CMSIS Driver" Cgroup="USART" Cvendor="Keil"/>
+    <component Cclass="CMSIS Driver" Cgroup="USART" Csub="Custom" Cvendor="ARM"/>
+    <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="Keil" layer="Board">
+      <file attr="config" category="header" name="CMSIS/Config/RTE_Device.h" version="1.0.0"/>
+      <file attr="config" category="linkerScript" name="Device/CMSDK_CM0plus/Source/ARM/ac6_arm.sct" version="1.0.0"/>
+      <file attr="config" category="sourceC" name="Device/CMSDK_CM0plus/Source/startup_CMSDK_CM0plus.c" version="1.1.0"/>
+      <file attr="config" category="sourceC" name="Device/CMSDK_CM0plus/Source/system_CMSDK_CM0plus.c" version="1.1.0"/>
+    </component>
+    <component Cclass="Test" Cgroup="Unity" Cvariant="Classic" Cvendor="Arm-Packs"/>
+    <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="Keil" layer="Board">
+      <file attr="config" category="header" name="Config/EventRecorderConf.h" version="1.1.0"/>
+    </component>
+    <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="User" Cvendor="Keil" layer="Board"/>
+    <component Cbundle="V2M-MPS2" Cclass="Board Support" Cgroup="Common" Cvendor="Keil"/>
+  </components>
+
+  <files>
+    <group name="App">
+      <file category="sourceC" layer="App" name="./Platform.c"/>
+    </group>
+    <group name="Documentation">
+      <file category="doc" layer="App" name="./README.md"/>
+    </group>
+    <group name="Board CMSDK_CM0plus">
+      <file category="sourceC" name="./CMSDK_CM0P_VHT/main.c"/>
+      <file category="header" name="./CMSDK_CM0P_VHT/main.h"/>
+      <file category="sourceC" name="./CMSDK_CM0P_VHT/retarget_stdio_vht.c"/>
+    </group>
+  </files>
+
+</cprj>
