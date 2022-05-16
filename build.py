@@ -89,7 +89,7 @@ def timestamp(t: datetime = datetime.now()):
 
 @matrix_axis("target", "t", "The project target(s) to build")
 class TargetAxis(Enum):
-    debug = ('CMSDK_CM0plus_VHT')
+    debug = ('CMSDK_CM0PLUS_VHT')
 
 
 @matrix_action
